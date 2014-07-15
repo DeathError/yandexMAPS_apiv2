@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069)http://api.yandex.ru/maps/doc/jsapi/1.x/examples/custom-cs-plots.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Примеры. Пользовательские координатные системы. Просмотр чертежей.</title>
+	<script src="http://api-maps.yandex.ru/1.1/index.xml?key=AEx4w1MBAAAATeb5ZQIAdkGU-mr10GEBusr3v9hz3Fj30ysAAAAAAAAAAACEmAP813k5-WNWiVkmjKElKC0r3g==" type="text/javascript"></script>
+    <script type="text/javascript"> 
+        YMaps.jQuery(function () {
+            // Опишем свой класс тайлов
+            function myTile (dataSource) {
+                    // позиция тайла в пикселах относительно левого верхнего угла карты
+                var myPos = new YMaps.Point(), 
+
+                    // HTML-элемент тайла
+                    element = YMaps.jQuery("<div/>").addClass("myTile"),
+
+                    // размер тайла
+                    originalSize = new YMaps.Point(256);
+
+                // добавляет тайл на карту
+                this.onAddToMap = function (map, parentContainer) {
+                    element.appendTo(parentContainer);
+                };
+
+                // удаляет тайл с карты
+                this.onRemoveFromMap = function () {
+                    element.remove();
+                };
+
+                // задает новую позицию тайлу
+                this.setPosition = function (position) {
+                    myPos.moveTo(position);
+                    element.css({
+                        left : myPos.x,
+                        top : myPos.y
+                    });
+                };
+     
+                // возвращает текущую позицию тайла
+                this.getPosition = function () {
+                    return myPos.copy();
+                };
+     
+                // осуществляет загрузку тайла
+                this.load = function (tile, zoom) {
+                    element
+                        .removeClass("myTileFail")
+                        .addClass("myTileSuccess");
+                };
+     
+                // выставляет 404 тайл, если для данной области нет изображения
+                this.error = function () {
+                    element
+                        .removeClass("myTileSuccess")
+                        .addClass("myTileFail");
+                };
+
+                // отмена загрузки
+                this.abort = function () {
+                    element
+                        .removeClass("myTileFail")
+                        .addClass("myTileSuccess");
+                };
+
+                // масштабирование тайла
+                this.scale = function (coeff) {
+                    var newSize = originalSize.copy().scale(coeff);
+                    element.css({
+                        width : newSize.x,
+                        height : newSize.y
+                    });
+                };
+            }
+     
+            // Создаем декартову систему координат:
+            var myCoordSystem = new YMaps.CartesianCoordSystem(
+                    new YMaps.Point(0, 0),      // координаты левого нижнего угла
+                    new YMaps.Point(300, 300),  // координаты правого верхнего 
+                    5                           // масштаб
+                ),
+
+                // Создаем карту
+                map = new YMaps.Map(YMaps.jQuery("#YMapsID")[0], {
+                    coordSystem: myCoordSystem // передаем нашу систему координат
+                }),
+
+                // Создаем собственный источник тайлов
+                myData = new YMaps.TileDataSource("./2/", false, true),
+
+                // Создаем собственный тип карты
+                myType = new YMaps.MapType(["plot"], "Чертеж", {textColor: "#000000", minZoom: 0, maxZoom: myCoordSystem.getMaxZoom() }),
+
+                // Создаем миникарту
+                miniMap = new YMaps.MiniMap();
+
+            // Переопределим функцию получения тайла
+            myData.getTileUrl = function (tile, zoom) {
+    return this.getTileUrlTemplate()  + 'tile-'  + tile.x + '-' + tile.y + '.png';
+}
+            
+            // Добавим в список слоев новый слой, использующий наш источник данных
+            YMaps.Layers.add("plot", function () { return new YMaps.Layer(myData) });
+
+            // Выставим карте и миникарте наш тип
+            map.setType(myType);
+            miniMap.setType(myType);
+
+            // Добавим панель инструментов и ползунок масштаба
+            map.addControl(new YMaps.ToolBar());
+            map.addControl(new YMaps.Zoom({ noTips: true }));
+
+            // Выставим центр карты и масштаб
+            map.setCenter(new YMaps.Point(150, 150), 2);
+
+            // Включим масштабирование колесом мыши
+            map.enableScrollZoom();
+            
+            // Создадим какой-нибудь чертеж
+            // Например, нарисуем букву "Я" с помощью двух многоугольников
+
+            // Зададим стиль многоугольника
+            var style = new YMaps.Style();
+            style.polygonStyle = new YMaps.PolygonStyle();
+            style.polygonStyle.outline = false
+            style.polygonStyle.fillColor = "f9001dff"
+            YMaps.Styles.add("polygon#yandex", style);
+
+            // Рисуем
+            var polygon1 = new YMaps.Polygon([
+                    new YMaps.Point(215, 15),
+                    new YMaps.Point(215, 285),
+                    new YMaps.Point(164, 285),
+                    new YMaps.Point(164, 260),
+                    new YMaps.Point(188, 260),
+                    new YMaps.Point(188, 135),
+                    new YMaps.Point(147, 135),
+                    new YMaps.Point(82, 15),
+                    new YMaps.Point(115, 15),
+                    new YMaps.Point(167, 110),
+                    new YMaps.Point(188, 110),
+                    new YMaps.Point(188, 15)
+                    ], { style: "polygon#yandex", clickable: false }),
+
+                polygon2 = new YMaps.Polygon([
+                    new YMaps.Point(165.00, 285.00),
+                    new YMaps.Point(153.48, 283.80),
+                    new YMaps.Point(142.27, 280.23),
+                    new YMaps.Point(131.68, 274.39),
+                    new YMaps.Point(122.01, 266.44),
+                    new YMaps.Point(113.50, 256.60),
+                    new YMaps.Point(106.40, 245.13),
+                    new YMaps.Point(100.90, 232.35),
+                    new YMaps.Point(97.14, 218.60),
+                    new YMaps.Point(95.24, 204.27),
+                    new YMaps.Point(95.24, 189.73),
+                    new YMaps.Point(97.14, 175.40),
+                    new YMaps.Point(100.90, 161.65),
+                    new YMaps.Point(106.40, 148.87),
+                    new YMaps.Point(113.50, 137.40),
+                    new YMaps.Point(122.01, 127.56),
+                    new YMaps.Point(131.68, 119.61),
+                    new YMaps.Point(142.27, 113.77),
+                    new YMaps.Point(153.48, 110.20),
+                    new YMaps.Point(165.00, 109.00),
+                    new YMaps.Point(165.00, 134.00),
+                    new YMaps.Point(158.42, 134.86),
+                    new YMaps.Point(152.01, 137.41),
+                    new YMaps.Point(145.96, 141.59),
+                    new YMaps.Point(140.43, 147.28),
+                    new YMaps.Point(135.57, 154.33),
+                    new YMaps.Point(131.51, 162.54),
+                    new YMaps.Point(128.37, 171.69),
+                    new YMaps.Point(126.22, 181.53),
+                    new YMaps.Point(125.14, 191.80),
+                    new YMaps.Point(125.14, 202.20),
+                    new YMaps.Point(126.22, 212.47),
+                    new YMaps.Point(128.37, 222.31),
+                    new YMaps.Point(131.51, 231.46),
+                    new YMaps.Point(135.57, 239.67),
+                    new YMaps.Point(140.43, 246.72),
+                    new YMaps.Point(145.96, 252.41),
+                    new YMaps.Point(152.01, 256.59),
+                    new YMaps.Point(158.42, 259.14),
+                    new YMaps.Point(165.00, 260.00)
+                ], { style: "polygon#yandex", clickable: false });
+            
+            map.addOverlay(polygon1);
+            map.addOverlay(polygon2);
+        });
+    </script> 
+
+    <style type="text/css"> 
+        .myTile {
+            position: absolute;
+            width: 256px;
+            height: 256px;
+            border: 1px dashed gray;
+            border-collapse: collapse;
+        }
+        
+        .myTileSuccess {
+            background: #FFF;
+        }
+ 
+        .myTileFail {
+            background: antiquewhite;
+        }
+    </style> 
+</head> 
+<body> 
+    <div id="YMapsID" style="height: 700px; width: 1200px" class="YMaps YMaps-cursor-grab"></div> 
+ 
+</body></html>
