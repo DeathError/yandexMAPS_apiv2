@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
+<head>
+    <title>Карта Генплан api v2</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://api-maps.yandex.ru/2.0/?load=package.standard,package.geoObjects&lang=ru-RU" type="text/javascript"></script>
+    <script src="app.js" type="text/javascript"></script>
+    <style type="text/css">
+        #YMapsID {
+            width: 100%;
+            height: 100%;
+            min-height: 600px;
+        }
+
+        #YMapsID > ymaps {
+            background: url("bg.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+        }
+
+        #YMapsID .ymaps-copyrights-pane,
+        #YMapsID .ymaps-controls-rightbottom {
+            display: none;
+        }
+
+        .hause_items_shows{
+            display: none;
+        }
+
+        .show-items-info {
+            background: none repeat scroll 0 0 rgba(253, 250, 243, 0.8);
+            left: 0;
+            padding: 15px;
+            top: 0;
+            width: 250px;
+            z-index: 19;
+        }
+    </style>
+</head>
+<body>
+<map id="ImageMapsCom" name="image-maps">
+    <a href="/catalog/projects/aleksandrovskij_21186_kvm3/"
+       alt="Татьянинский 265,29 кв.м."
+       title="ул. Домбасова 1a"
+       data-maps="2042,239,2137,331"
+       class="hause_items_shows"
+       data-info="1310">
+        <div class="show-items-info">
+            <img src="/images/cms/data/catalog/12.jpg" alt=""><div class="description-house">
+            <p class="status"><span>Сотояния:</span><span color="1716">Продан</span></p><p class="plowad"><span>Площадь: </span>5,05</p><p class="stoimost"><span>Стоимость: </span></p></div></div>
+    </a>
+    <a href="/catalog/projects/aleksandrovskij_21186_kvm3/"
+       alt="Татьянинский 265,29 кв.м."
+       title="ул. Домбасова 2a"
+       data-maps="2149,323,2253,424"
+       class="hause_items_shows"
+       data-info="1310">
+        <div class="show-items-info">
+            <img src="/images/cms/data/catalog/12.jpg" alt=""><div class="description-house">
+            <p class="status"><span>Сотояния:</span><span color="1716">Продан</span></p><p class="plowad"><span>Площадь: </span>5,05</p><p class="stoimost"><span>Стоимость: </span></p></div></div>
+    </a>
+    <a href="/catalog/projects/aleksandrovskij_21186_kvm3/"
+       alt="Татьянинский 265,29 кв.м."
+       title="ул. Домбасова 2"
+       data-maps="2271,398,2384,497"
+       class="hause_items_shows"
+       data-info="1310">
+        <div class="show-items-info">
+            <img src="/images/cms/data/catalog/12.jpg" alt=""><div class="description-house">
+            <p class="status"><span>Сотояния:</span><span color="1716">Продан</span></p><p class="plowad"><span>Площадь: </span>5,05</p><p class="stoimost"><span>Стоимость: </span></p></div></div>
+    </a>
+    <a href="/catalog/projects/aleksandrovskij_21186_kvm3/"
+       alt="Татьянинский 265,29 кв.м."
+       title="МАГАЗ"
+       data-maps="1319,1237,1441,1339"
+       class="hause_items_shows"
+       data-info="1310">
+        <div class="show-items-info">
+            <img src="http://adveks.gowhiterabbit.ru/images/cms/data/content/minimarket.png" width="250px">
+</div>
+    </a>
+</map>
+
+<div id="YMapsID"></div>
+</body>
+</html>
