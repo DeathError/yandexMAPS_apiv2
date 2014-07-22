@@ -27,10 +27,9 @@ $(function () {
             contentString[clo_in][6] = min_y_dpi+((((parseInt(example[3], 10)*100)/max_y_px)*(max_y_dpi-min_y_dpi))/100);
             //Правый X
             contentString[clo_in][7] = min_x_dpi+((((parseInt(example[2], 10)*100)/max_x_px)*(max_x_dpi-min_x_dpi))/100);
+            contentString[clo_in][8] = $(blocks).attr('status');
             clo_in++
-
         });
-        console.log('Y='+contentString[0][6]+' x='+contentString[0][7]);
     }
 
 
@@ -66,91 +65,88 @@ $(function () {
         var myMap = (new TilerConverter(options)).getMap();
         //создаём точки
         for (var i = 0; i < contentString.length; i++) {
-            /*contentString[i][5] = new ymaps.Placemark([contentString[i][2], contentString[i][3]], {
-             balloonContentHeader: contentString[i][0],
-             balloonContentBody: contentString[i][1],
-             balloonContentFooter: "<a href='" + contentString[i][4] + "'>подробней</a>",
-             hintContent: contentString[i][0]
-             }, {
-             hideIcon: true,
-             /*
-             hideIcon: true,
-             iconImageHref: 'icon.png', // картинка иконки
-             iconImageSize: [12, 20], // размеры картинки
-             iconImageOffset: [-6, -10], // смещение картинки
-             openEmptyBalloon: true
-             }
-             );*/
             contentString[i][5] = new ymaps.Rectangle([
-                [contentString[i][2],contentString[i][3]],
-                [contentString[i][6],contentString[i][7]]
+                [contentString[i][2], contentString[i][3]],
+                [contentString[i][6], contentString[i][7]]
             ], {
                 balloonContentHeader: contentString[i][0],
                 balloonContent: contentString[i][1],
-                balloonContentFooter: "<a href='" + contentString[i][4] + "'>подробней</a>",
+                balloonContentFooter: "<a class='show_info_urls' href='" + contentString[i][4] + "'>подробней</a>",
                 hintContent: contentString[i][0]
             }, {
                 fillColor: '#7df9ff33',
-                fillOpacity: 0.5,
-                strokeColor: '#0000FF',
-                strokeOpacity: 0.5,
+                fillOpacity: 0,
+                strokeColor: '#7df9ff33',
+                //strokeStyle: 'none',
+                strokeOpacity: 0,
                 strokeWidth: 2,
                 borderRadius: 6
             });
+            if (contentString[i][8] == 'Свободен') {
+                console.log(contentString[i][8]);
+                contentString[i][5] = new ymaps.Rectangle([
+                    [contentString[i][2], contentString[i][3]],
+                    [contentString[i][6], contentString[i][7]]
+                ], {
+                    balloonContentHeader: contentString[i][0],
+                    balloonContent: contentString[i][1],
+                    balloonContentFooter: "<a class='show_info_urls' href='" + contentString[i][4] + "'>подробней</a>",
+                    hintContent: contentString[i][0]
+                }, {
+                    fillColor: '#7df9ff33',
+                    fillOpacity: 0.8,
+                    strokeColor: '#7df9ff33',
+                    //strokeStyle: 'none',
+                    strokeOpacity: 0.5,
+                    strokeWidth: 2,
+                    borderRadius: 6
+                });
+            };
+
+            if (contentString[i][8] == 'Спецпредложение') {
+                console.log(contentString[i][8]);
+                contentString[i][5] = new ymaps.Rectangle([
+                    [contentString[i][2], contentString[i][3]],
+                    [contentString[i][6], contentString[i][7]]
+                ], {
+                    balloonContentHeader: contentString[i][0],
+                    balloonContent: contentString[i][1],
+                    balloonContentFooter: "<a class='show_info_urls' href='" + contentString[i][4] + "'>подробней</a>",
+                    hintContent: contentString[i][0]
+                }, {
+                    fillColor: '#FFD700',
+                    fillOpacity: 0.8,
+                    strokeColor: '#FFD700',
+                    //strokeStyle: 'none',
+                    strokeOpacity: 0.5,
+                    strokeWidth: 2,
+                    borderRadius: 6
+                });
+            };
+
+            if (contentString[i][8] == 'Забронирован') {
+                console.log(contentString[i][8]);
+                contentString[i][5] = new ymaps.Rectangle([
+                    [contentString[i][2], contentString[i][3]],
+                    [contentString[i][6], contentString[i][7]]
+                ], {
+                    balloonContentHeader: contentString[i][0],
+                    balloonContent: contentString[i][1],
+                    balloonContentFooter: "<a class='show_info_urls' href='" + contentString[i][4] + "'>подробней</a>",
+                    hintContent: contentString[i][0]
+                }, {
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.8,
+                    strokeColor: '#FF0000',
+                    //strokeStyle: 'none',
+                    strokeOpacity: 0.5,
+                    strokeWidth: 2,
+                    borderRadius: 6
+                })
+            };
+
             myMap.geoObjects.add(contentString[i][5]);
         };
-
-        function stosis() {
-            var position = $('.ymaps-b-zoom__mark').position();
-            var position_object = $('.ymaps-layers-pane').position();
-            var width = $('#YMapsID').width();
-            var height = $('#YMapsID').height();
-            if (position.top == '3') {
-                var object_width = 434,
-                    object_height = 197;
-                if ((myMap.behaviors.isEnabled('drag'))) {
-                    myMap.behaviors.disable('drag');
-                }
-            } else {
-                if (position.top == '10') {
-                    var object_width = 868,
-                        object_height = 394;
-                    myMap.behaviors.disable('drag');
-                    if ((width < object_width) && !(myMap.behaviors.isEnabled('drag'))) {
-                        myMap.behaviors.enable('drag');
-                    }
-                } else {
-                    if (position.top == '17') {
-                        var object_width = 1736,
-                            object_height = 788;
-                        myMap.behaviors.disable('drag');
-                        if ((width < object_width) && !(myMap.behaviors.isEnabled('drag'))) {
-                            myMap.behaviors.enable('drag');
-                        }
-                    } else {
-                        if (position.top == '24') {
-                            var object_width = 3472,
-                                object_height = 1576;
-                            myMap.behaviors.disable('drag');
-                            if ((width < object_width) && !(myMap.behaviors.isEnabled('drag'))) {
-                                myMap.behaviors.enable('drag');
-                            }
-                        } else {
-                            if (position.top == '31') {
-                                var object_width = 6944,
-                                    object_height = 3154;
-                                myMap.behaviors.disable('drag');
-                                if ((width < object_width) && !(myMap.behaviors.isEnabled('drag'))) {
-                                    myMap.behaviors.enable('drag');
-                                }
-                            } else {
-                                console.log('zoom = error');
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
     });
 });
