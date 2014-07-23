@@ -28,6 +28,7 @@ $(function () {
             //Правый X
             contentString[clo_in][7] = min_x_dpi+((((parseInt(example[2], 10)*100)/max_x_px)*(max_x_dpi-min_x_dpi))/100);
             contentString[clo_in][8] = $(blocks).attr('status');
+            contentString[clo_in][9] = $(blocks).attr('icon');
             clo_in++
         });
     }
@@ -74,16 +75,14 @@ $(function () {
                 balloonContentFooter: "<a class='show_info_urls' href='" + contentString[i][4] + "'>подробней</a>",
                 hintContent: contentString[i][0]
             }, {
-                fillColor: '#7df9ff33',
+                fillColor: '#adc24833',
                 fillOpacity: 0,
-                strokeColor: '#7df9ff33',
-                //strokeStyle: 'none',
+                strokeColor: '#adc24833',
                 strokeOpacity: 0,
                 strokeWidth: 2,
                 borderRadius: 6
             });
             if (contentString[i][8] == 'Свободен') {
-                console.log(contentString[i][8]);
                 contentString[i][5] = new ymaps.Rectangle([
                     [contentString[i][2], contentString[i][3]],
                     [contentString[i][6], contentString[i][7]]
@@ -93,18 +92,18 @@ $(function () {
                     balloonContentFooter: "<a class='show_info_urls' href='" + contentString[i][4] + "'>подробней</a>",
                     hintContent: contentString[i][0]
                 }, {
+                    fill: false,
+                    fillImageHref: contentString[i][9],
                     fillColor: '#7df9ff33',
-                    fillOpacity: 0.8,
+                    fillOpacity: 1,
                     strokeColor: '#7df9ff33',
-                    //strokeStyle: 'none',
-                    strokeOpacity: 0.5,
+                    strokeOpacity: 0,
                     strokeWidth: 2,
                     borderRadius: 6
                 });
             };
 
             if (contentString[i][8] == 'Спецпредложение') {
-                console.log(contentString[i][8]);
                 contentString[i][5] = new ymaps.Rectangle([
                     [contentString[i][2], contentString[i][3]],
                     [contentString[i][6], contentString[i][7]]
@@ -114,18 +113,18 @@ $(function () {
                     balloonContentFooter: "<a class='show_info_urls' href='" + contentString[i][4] + "'>подробней</a>",
                     hintContent: contentString[i][0]
                 }, {
-                    fillColor: '#FFD700',
-                    fillOpacity: 0.8,
-                    strokeColor: '#FFD700',
-                    //strokeStyle: 'none',
-                    strokeOpacity: 0.5,
+                    fill: false,
+                    fillImageHref: contentString[i][9],
+                    fillColor: '#FFD70033',
+                    fillOpacity: 1,
+                    strokeColor: '#FFD70033',
+                    strokeOpacity: 0,
                     strokeWidth: 2,
                     borderRadius: 6
                 });
             };
 
             if (contentString[i][8] == 'Забронирован') {
-                console.log(contentString[i][8]);
                 contentString[i][5] = new ymaps.Rectangle([
                     [contentString[i][2], contentString[i][3]],
                     [contentString[i][6], contentString[i][7]]
@@ -135,28 +134,44 @@ $(function () {
                     balloonContentFooter: "<a class='show_info_urls' href='" + contentString[i][4] + "'>подробней</a>",
                     hintContent: contentString[i][0]
                 }, {
-                    fillColor: '#FF0000',
-                    fillOpacity: 0.8,
-                    strokeColor: '#FF0000',
-                    //strokeStyle: 'none',
-                    strokeOpacity: 0.5,
+                    fill: false,
+                    fillImageHref: contentString[i][9],
+                    fillColor: '#FF000033',
+                    fillOpacity: 1,
+                    strokeColor: '#FF000033',
+                    strokeOpacity: 0,
                     strokeWidth: 2,
                     borderRadius: 6
                 })
             };
-
+            contentString[i][5].events.add(['mouseenter'], function (e) {
+               // e.get('target').options.set('balloonIconImageHref', 'map.png');
+                //при навидение покажим домик или если нет миниатюрки покажем цвет
+                // рамка всегда нужна, зависит от статуса дома
+                e.get('target').options.set({
+                    fill: true,
+                    strokeOpacity: 0.5,
+                    fillOpacity: 1,
+                    fillMethod: 'stretch'
+                });
+                console.log(contentString[0])
+            }).add('mouseleave', function (e) {
+                e.get('target').options.set({
+                    fill: false,
+                    strokeOpacity: 0,
+                    fillOpacity: 0
+                });
+            });;
             myMap.geoObjects.add(contentString[i][5]);
         };
 
     });
 });
 
-
 /**
  * @deprecated
  * Для совместимости с API 1.x
  */
- 
 
 YMaps = {
     MapType: {
