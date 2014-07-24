@@ -168,8 +168,6 @@ $(function () {
                         fillOpacity: 1
                     });
                 }
-
-                console.log(icon)
             }).add('mouseleave', function (e) {
                 var icon = e.get('target').options.get('fillImageHref');
                 var icon_href = e.get('target').options.get('iconShadowImageHref');
@@ -178,13 +176,13 @@ $(function () {
                         fillImageHref: icon_href,
                         iconShadowImageHref: icon
                     });
-                }else{
+                }
+                if (icon==undefined){
                     e.get('target').options.set({
                         fillOpacity: 0
                     });
                 }
-
-            });;
+            });
             myMap.geoObjects.add(contentString[i][5]);
         };
 
