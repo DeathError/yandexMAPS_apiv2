@@ -29,6 +29,7 @@ $(function () {
             contentString[clo_in][7] = min_x_dpi+((((parseInt(example[2], 10)*100)/max_x_px)*(max_x_dpi-min_x_dpi))/100);
             contentString[clo_in][8] = $(blocks).attr('status');
             contentString[clo_in][9] = $(blocks).attr('icon');
+            contentString[clo_in][10] = $(blocks).attr('icon_h');
             clo_in++
         });
     }
@@ -92,8 +93,9 @@ $(function () {
                     balloonContentFooter: "<a class='show_info_urls' href='" + contentString[i][4] + "'>подробней</a>",
                     hintContent: contentString[i][0]
                 }, {
-                    fill: false,
+                    fill: true,
                     fillImageHref: contentString[i][9],
+                    iconShadowImageHref: contentString[i][10],
                     fillColor: '#7df9ff33',
                     fillOpacity: 1,
                     strokeColor: '#7df9ff33',
@@ -113,8 +115,9 @@ $(function () {
                     balloonContentFooter: "<a class='show_info_urls' href='" + contentString[i][4] + "'>подробней</a>",
                     hintContent: contentString[i][0]
                 }, {
-                    fill: false,
+                    fill: true,
                     fillImageHref: contentString[i][9],
+                    iconShadowImageHref: contentString[i][10],
                     fillColor: '#FFD70033',
                     fillOpacity: 1,
                     strokeColor: '#FFD70033',
@@ -134,8 +137,9 @@ $(function () {
                     balloonContentFooter: "<a class='show_info_urls' href='" + contentString[i][4] + "'>подробней</a>",
                     hintContent: contentString[i][0]
                 }, {
-                    fill: false,
+                    fill: true,
                     fillImageHref: contentString[i][9],
+                    iconShadowImageHref: contentString[i][10],
                     fillColor: '#FF000033',
                     fillOpacity: 1,
                     strokeColor: '#FF000033',
@@ -144,23 +148,42 @@ $(function () {
                     borderRadius: 6
                 })
             };
+            if (contentString[i][5].options.get('fillImageHref')==''){
+                contentString[i][5].options.set({fillOpacity: 0});
+            };
             contentString[i][5].events.add(['mouseenter'], function (e) {
                // e.get('target').options.set('balloonIconImageHref', 'map.png');
                 //при навидение покажим домик или если нет миниатюрки покажем цвет
                 // рамка всегда нужна, зависит от статуса дома
-                e.get('target').options.set({
-                    fill: true,
-                    strokeOpacity: 0.5,
-                    fillOpacity: 1,
-                    fillMethod: 'stretch'
-                });
-                console.log(contentString[0])
+                var icon = e.get('target').options.get('fillImageHref');
+                var icon_href = e.get('target').options.get('iconShadowImageHref');
+                if (icon_href!=''){
+                    e.get('target').options.set({
+                        fillImageHref: icon_href,
+                        iconShadowImageHref: icon,
+                        fillMethod: 'stretch'
+                    });
+                }else {
+                    e.get('target').options.set({
+                        fillOpacity: 1
+                    });
+                }
+
+                console.log(icon)
             }).add('mouseleave', function (e) {
-                e.get('target').options.set({
-                    fill: false,
-                    strokeOpacity: 0,
-                    fillOpacity: 0
-                });
+                var icon = e.get('target').options.get('fillImageHref');
+                var icon_href = e.get('target').options.get('iconShadowImageHref');
+                if (icon!=''){
+                    e.get('target').options.set({
+                        fillImageHref: icon_href,
+                        iconShadowImageHref: icon
+                    });
+                }else{
+                    e.get('target').options.set({
+                        fillOpacity: 0
+                    });
+                }
+
             });;
             myMap.geoObjects.add(contentString[i][5]);
         };
