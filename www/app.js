@@ -1,3 +1,9 @@
+/**
+ * Created by DESmyn on 16.07.14.
+ * autor: Daniil Konoplisku
+ * autor_site: destherror.ru
+ * edit_dta: 24.07.2014
+ */
 
 $(function () {
 
